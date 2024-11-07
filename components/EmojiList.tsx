@@ -20,7 +20,7 @@ export default function EmojiList({ onSelect, onCloseModal }: Props) {
     return (
         <FlatList 
             horizontal
-            showsHorizontalScrollIndicator={Platform.OS === "web" ? true : false}
+            showsHorizontalScrollIndicator={Platform.OS === "web"}
             contentContainerStyle={styles.listContainer}
             data={emojis}
             renderItem={({ item, index }) => (

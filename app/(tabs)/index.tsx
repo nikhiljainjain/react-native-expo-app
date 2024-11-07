@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import { type ImageSource } from 'expo-image';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import Button from '@/components/Button';
 import ImageViewer from '@/components/ImageViewer';
@@ -37,6 +38,7 @@ export default function App() {
 
 	const onReset = () => {
 		setShowAppOptions(false);
+		setPickedEmoji(undefined);
 	}
 
 	const onAddSticker = () => {
@@ -52,10 +54,10 @@ export default function App() {
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.imageContainer}>
+			<GestureHandlerRootView style={styles.imageContainer}>
 				<ImageViewer imgSource={PlaceholderImage} selectedImage={selectedImage} />
-				{pickedEmoji && (<EmojiSticker stickerSource={pickedEmoji} imageSize={40} />)}
-			</View>
+				{pickedEmoji && (<EmojiSticker imageSize={40} stickerSource={pickedEmoji} />)}
+			</GestureHandlerRootView>
 			{
 				showAppOptions ? 
 				(<View style={styles.optionsContainer}>
