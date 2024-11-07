@@ -1,10 +1,11 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useState, useRef } from 'react';
 import { type ImageSource } from 'expo-image';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as MediaLibrary from 'expo-media-library';
 import { captureRef } from 'react-native-view-shot';
+import domToImage from 'dom-to-image';
 
 import Button from '@/components/Button';
 import ImageViewer from '@/components/ImageViewer';
@@ -59,14 +60,27 @@ export default function App() {
 
 	const onSaveImageAsync = async () => {
 		try {
-			const localUri = await captureRef(imageRef, {
-				height: 440,
-				quality: 1
-			});
+			if (Platform.OS !== 'web') {
+				const localUri = await captureRef(imageRef, {
+					height: 440,
+					quality: 1
+				});
+	
+				await MediaLibrary.saveToLibraryAsync(localUri);
+				if (localUri) {
+					alert('Saved!');
+				}
+			} else {
+				const dataUrl = await domToImage.toJpeg(imageRef.current, {
+					height: 440,
+					quality: 1,
+					width: 320
+				});
 
-			await MediaLibrary.saveToLibraryAsync(localUri);
-			if (localUri) {
-				alert('Saved!');
+				let link = document.createElement('a');
+				link.download = `image-smash_${Date.now()}.jpeg`;
+				link.href = dataUrl;
+				link.click();
 			}
 		} catch (error) {
 			console.error('Error saving image:', error);
